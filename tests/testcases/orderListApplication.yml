@@ -1,0 +1,44 @@
+#-------------------------------------------------
+#   File Name：     orderListApplication.yml
+#   Description :
+#   Author :        Meiyo
+#   date：          2018/03/13 10:29
+#-------------------------------------------------
+#   Change Activity:
+#                   2018/03/13: Create file
+#-------------------------------------------------
+
+
+- config:
+      name: order list  application
+      request: $default_request
+
+
+# 收银员登录
+- test:
+      name: Cashier_login_success
+      suite: cashier_login($activateCode, $userCode, $userPwd)
+
+
+# 接口syt_v2_orderpay_list，获取订单列表的测试用例
+
+- test:
+      name: Get_vip_info_fail_cardNo_Null
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: ''
+          params:
+              command: syt_v3_member_card_info
+
+      validators:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", '10']
+
+
+
+
+

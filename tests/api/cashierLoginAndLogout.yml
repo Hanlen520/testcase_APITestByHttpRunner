@@ -1,0 +1,63 @@
+#-------------------------------------------------
+#   File Name：     cashierLoginAndLogout
+#   Description :
+#   Author :        Meiyo
+#   date：          2017/12/28 14:30
+#-------------------------------------------------
+#   Change Activity:
+#                   2017/12/28: Create File
+#------------------------------------------------- 
+
+# __author__ = 'Meiyo'
+
+- api:
+    def: merchant_activate($activateCode)
+    request:
+        url: ''
+        method: POST
+        data:
+            activateCode: $activateCode
+        params:
+                command: syt_v2_activate
+
+    validators:
+        - eq: ["status_code", 200]
+        - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+        - eq: ["content.result.success", True]
+        - eq: ["content.result.errorCode", '0']
+        - eq: ["content.data.merchantId", $activateCode]
+
+
+- api:
+    def: cashier_login($activateCode, $userCode, $userPwd)
+    request:
+        url: ''
+        method: POST
+        data:
+            merchantCode: $activateCode
+            userCode: $userCode
+            userPwd: $userPwd
+        params:
+                command: syt_v2_login
+
+    validators:
+        - eq: ["status_code", 200]
+        - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+        - eq: ["content.result.success", True]
+        - eq: ["content.result.errorCode", '0']
+        - eq: ["content.data.userCode", $userCode]
+
+
+- api:
+    def: cashier_logout()
+    request:
+        url: ''
+        method: POST
+        params:
+            command: syt_v2_logout
+
+    validators:
+        - eq: ["status_code", 200]
+        - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+        - eq: ["content.result.success", True]
+        - eq: ["content.result.errorCode", '0']

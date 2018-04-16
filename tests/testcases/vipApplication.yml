@@ -1,0 +1,402 @@
+#-------------------------------------------------
+#   File Name：     vipApplication
+#   Description :
+#   Author :        Meiyo
+#   date：          2018/1/5 21:38
+#-------------------------------------------------
+#   Change Activity:
+#                   2018/1/5: Create the file
+#------------------------------------------------- 
+
+
+
+- config:
+      name: VIP application
+      request: $default_request
+
+# 收银员登录
+- test:
+      name: Cashier_login_success
+      suite: cashier_login($activateCode, $userCode, $userPwd)
+
+# 接口syt_v3_recharge_list，获取会员充值方案
+- test:
+      name: Get_recharge_scheme_success
+      api: get_recharge_scheme()
+
+
+# 接口syt_v3_member_card_info获取会员信息，查询会员，手机号为空
+- test:
+      name: Get_vip_info_fail_cardNo_Null
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: ''
+          params:
+              command: syt_v3_member_card_info
+
+      validators:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", '10']
+
+#接口syt_v3_member_card_info获取会员信息，查询会员，会员不存在
+- test:
+      name: Get_vipInfo_fail_cardNo_NotExist
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: 1862190256111
+          params:
+              command: syt_v3_member_card_info
+
+      validators:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", 'VIP_CARD_NOT_EXISTS']
+
+- test:
+      name: Get_vipInfo_success
+      api: get_vipInfo($vipTelephone)
+
+
+#接口syt_v3_member_coupon_list，获取会员券列表的测试用例
+# 查询会员券列表，会员卡号为空
+- test:
+      name: Get_couponList_ofVip_fail_cardNo_null
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: ''
+          params:
+              command: syt_v3_member_coupon_list
+
+      validators:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", '10']
+#
+#未做会员卡不存在的判断
+#-   test:
+#        name: Get_couponList_ofVip_fail_cardNo_notExist
+#        request:
+#            url: ''
+#            method: POST
+#            data:
+#                cardNo: 2017122730821712
+#            params:
+#                command: syt_v3_member_coupon_list
+#
+#        validators:
+#            - eq: ["status_code", 200]
+#            - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+#            - eq: ["content.result.success", False]
+#            - eq: ["content.result.errorCode", '10']
+
+# 根据会员卡号，获取券列表
+- test:
+      name: Get_couponList_ofVip_success
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: $vipCardNo
+          params:
+              command: syt_v3_member_coupon_list
+
+      validators:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+          - eq: ["content.result.errorCode", '0']
+
+#接口syt_v3_update_member_card_info，更新会员基础信息的测试用例
+# 会员卡号不存在
+- test:
+      name: Update_vipInfo_fail_cardNo_notExist
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: 1862190256111
+              vipName: ''
+              vipBirthday: ''
+              vipAddress: ''
+          params:
+              command: syt_v3_update_member_card_info
+
+      validators:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", '10']
+# 会员的生日为空
+- test:
+      name: Update_vipInfo_fail_birthday_null
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: $vipCardNo
+              vipName: ''
+              vipBirthday: ''
+              vipAddress: ''
+          params:
+              command: syt_v3_update_member_card_info
+
+      validators:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", '10']
+
+# 更新会员的生日
+- test:
+      name: Update_vipInfo_success
+
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: $vipCardNo
+              vipName: ''
+              vipBirthday: ${get_current_date()}
+              vipAddress: ''
+          params:
+              command: syt_v3_update_member_card_info
+
+      validators:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+          - eq: ["content.result.errorCode", '0']
+
+#  查看update之后会员的信息
+- test:
+      name: Get_vipInfo_success_after_update
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: $vipTelephone
+          params:
+              command: syt_v3_member_card_info
+      variables:
+          - currentDate: ${get_current_date()}
+
+      extract:
+          - vipCardNo: content.data.cardNo
+      validators:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+          - str_eq: ["content.result.errorCode", 0]
+          - str_eq: ['content.data.vipPhone', $vipTelephone]
+          - eq: ['content.data.vipName', '']
+          - eq: ['content.data.vipAddress', '']
+          - eq: ['content.data.vipBirthday', $currentDate]
+
+
+#接口syt_v3_get_upgrade_discount，获取会员折扣信息的测试用例
+- test:
+      name: Get_discount_ofVIP_fail_rechargeScheme_notExsit
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: $vipCardNo
+              rechargeAmount: 1
+              activityId: 6551
+          params:
+              command: syt_v3_get_upgrade_discount
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", 'ACTIVITY_NOT_EXISTS']
+
+
+- test:
+      name: Get_discount_ofVIP_fail_cardNo_notExsit
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: 2017122730821712
+              rechargeAmount: 1
+              activityId: $rechargeScheme
+          params:
+              command: syt_v3_get_upgrade_discount
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", 'VIP_CARD_NOT_EXISTS']
+
+
+# 前提： 获取充值方案的id,  会员卡号
+- test:
+      name: Get_discount_ofVIP_success
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: $vipCardNo
+              rechargeAmount: 1
+              activityId: $rechargeScheme
+          params:
+              command: syt_v3_get_upgrade_discount
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+          - eq: ["content.result.errorCode", '0']
+
+#接口syt_v2_member_card_recharge，会员充值的测试用例
+# 前提： 获取充值方案的id,  会员卡号
+
+- test:
+      name: Recharge_vipCard_fail_cardNo_null
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo:
+              rechargeAmount: 1
+              activityId: $rechargeScheme
+              tradeType: 5  # 现金记账
+              remak: '现金记账'
+              print: false  # 参数的意义
+
+          params:
+              command: syt_v2_member_card_recharge
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", '10']
+
+- test:
+      name: Recharge_vipCard_fail_cardNo_notExist
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: 1
+              rechargeAmount: 1
+              activityId: $rechargeScheme
+              tradeType: 5  # 现金记账
+              print: false
+
+          params:
+              command: syt_v2_member_card_recharge
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", 'PARAM_ERROR']
+
+- test:
+      name: Recharge_vipCard_fail_cardNo_notExist
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: 1
+              rechargeAmount: 1
+              activityId: $rechargeScheme
+              tradeType: 5  # 现金记账
+              print: false  #
+
+          params:
+              command: syt_v2_member_card_recharge
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", 'PARAM_ERROR']
+
+- test:
+      name: Recharge_vipCard_fail_rechargeAmount_null
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: 1
+              rechargeAmount:
+              activityId: $rechargeScheme
+              tradeType: 5  # 现金记账
+              print: false
+
+          params:
+              command: syt_v2_member_card_recharge
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", 'PARAM_ERROR']
+
+- test:
+      name: Recharge_vipCard_fail_rechargeAmount_negative
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: 1
+              rechargeAmount: -10
+              activityId: $rechargeScheme
+              tradeType: 5  # 现金记账
+              print: false
+
+          params:
+              command: syt_v2_member_card_recharge
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", False]
+          - eq: ["content.result.errorCode", '10']
+
+#  activityId为空或者非法，均可充值成功
+#  tradeType的判断逻辑不清楚
+- test:
+      name: Recharge_vipCard_success
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: $vipCardNo
+              rechargeAmount: 1
+              activityId: $rechargeScheme
+              tradeType: 5  # 现金记账
+              remak: '现金记账'
+              print: false
+
+          params:
+              command: syt_v2_member_card_recharge
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+          - str_eq: ["content.result.errorCode", 0]
+          - str_eq: ["content.data.orderStatus", 2]
+          - str_eq: ["content.data.tradeType", 3]
+          - eq: ["content.data.remark", '会员卡充值']
+          - not_equals: ["content.data.localOrderNo", '']
+
+
+

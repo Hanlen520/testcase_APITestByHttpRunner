@@ -1,0 +1,24 @@
+#-------------------------------------------------
+#   File Name：     cashierLoginAndLogout.yml
+#   Description :
+#   Author :        Meiyo
+#   date：          2018/1/29 18:12
+#-------------------------------------------------
+#   Change Activity:
+#                   2018/1/29: Create the file
+#-------------------------------------------------
+
+# __author__ = 'Meiyo'
+
+
+- config:
+      name: Cashier login
+      def: cashier_login($activateCode, $userCode, $userPwd)
+
+- test:
+      name: Merchant_activate_success
+      api: merchant_activate($activateCode)
+
+- test:
+      name: Cashier_login_success
+      api: cashier_login($activateCode, $userCode, $userPwd)

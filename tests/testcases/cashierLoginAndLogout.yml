@@ -1,0 +1,99 @@
+#-------------------------------------------------
+#   File Name：     cashierLogin.yml
+#   Description :
+#   Author :        Meiyo
+#   date：          2017/12/28 10:29
+#-------------------------------------------------
+#   Change Activity:
+#                   2017/12/28: Create file
+#------------------------------------------------- 
+
+
+-   config:
+        name: Cashier login and logout
+        request: $default_request
+
+# 商户激活，商户不存在
+-   test:
+        name: Merchant_activate_notExist
+        request:
+            url: ''
+            method: POST
+            data:
+                activateCode: A003001000001
+            params:
+                command: syt_v2_activate
+
+        validators:
+            - eq: ["status_code", 200]
+            - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+            - eq: ["content.result.success", False]
+            - eq: ["content.result.errorCode", '2004']
+
+# 商户激活，成功
+-   test:
+        name: Merchant_activate_success
+        api: merchant_activate($activateCode)
+
+# 收银员登录，用户名不存在
+-   test:
+        name: Cashier_login_userCode_fail
+        request:
+            url: ''
+            method: POST
+            data:
+                merchantCode: $activateCode
+                userCode: y
+                userPwd: $userPwd
+            params:
+                command: syt_v2_login
+
+        validators:
+            - eq: ["status_code", 200]
+            - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+            - eq: ["content.result.success", False]
+            - eq: ["content.result.errorCode", '200']
+
+# 收银员登录，密码错误
+-   test:
+        name: Cashier_login_password_fail
+        request:
+            url: ''
+            method: POST
+            data:
+                merchantCode: $activateCode
+                userCode: $userCode
+                userPwd: aaaa
+            params:
+                command: syt_v2_login
+
+        validators:
+            - eq: ["status_code", 200]
+            - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+            - eq: ["content.result.success", False]
+            - eq: ["content.result.errorCode", '200']
+
+# 收银员登录成功
+-   test:
+        name: Cashier_login_success
+        api: cashier_login($activateCode, $userCode, $userPwd)
+
+# 获取活动列表
+-   test:
+        name: Get_activity_rule_status
+        request:
+            url: ''
+            method: POST
+            params:
+                command: syt_v2_get_activity_rule_status
+
+        validators:
+            - eq: ["status_code", 200]
+            - eq: ["headers.Content-Type", 'application/json;charset=UTF-8']
+            - eq: ["content.result.success", True]
+
+# 收银员退出
+-   test:
+        name: Cashier_logout
+        api: cashier_logout()
+

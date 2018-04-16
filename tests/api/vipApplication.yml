@@ -1,0 +1,52 @@
+#-------------------------------------------------
+#   File Name：     vipApplication
+#   Description :
+#   Author :        Meiyo
+#   date：          2018/1/6 18:12
+#-------------------------------------------------
+#   Change Activity:
+#                   2018/1/6: Create the file
+#------------------------------------------------- 
+
+# __author__ = 'Meiyo'
+
+# 获取会员充值方案
+- api:
+    def: get_recharge_scheme()
+    request:
+        url: ''
+        method: POST
+        data: ''
+        params:
+            command: syt_v3_recharge_list
+
+    extract:
+        - rechargeScheme: content.data.activityId
+    validators:
+        - eq: ["status_code", 200]
+        - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+        - eq: ["content.result.success", True]
+        - eq: ["content.result.errorCode", '0']
+
+# 根据手机号，获取会员的信息
+- api:
+    def: get_vipInfo($vipTelephone)
+    request:
+        url: ''
+        method: POST
+        data:
+            cardNo: $vipTelephone
+        params:
+            command: syt_v3_member_card_info
+
+    extract:
+        - vipCardNo: content.data.cardNo
+    validators:
+        - eq: ["status_code", 200]
+        - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+        - eq: ["content.result.success", True]
+        - eq: ["content.result.errorCode", '0']
+        - str_eq: ["content.data.vipPhone", $vipTelephone]
+
+
+

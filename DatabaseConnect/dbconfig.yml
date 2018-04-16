@@ -1,0 +1,38 @@
+
+#-------------------------------------------------
+#   Filename：     dbconfig
+#   Description :
+#   Author :        Meiyo
+#   date：          2018/3/13 16:28
+#-------------------------------------------------
+#   Change Activity:
+#                   2018/3/13:
+#-------------------------------------------------
+
+zypPlatformTest:
+    host: 114.55.27.99
+    port: 3306
+    user: webuserlimit
+    password: ZI@limited1213
+    db: zypPlatformTest
+    charset: utf8
+
+
+caibaovip:
+    host: 118.178.129.90
+    port: 8066
+    user: webuserlimit
+    password: ZI@limited1213
+    db: caibaovip
+    charset: utf8
+
+
+caibaotc:
+    host: 118.178.129.90
+    port: 8066
+    user: webuserlimit
+    password: ZI@limited1213
+    db: caibaotc
+    charset: utf8
+
+
