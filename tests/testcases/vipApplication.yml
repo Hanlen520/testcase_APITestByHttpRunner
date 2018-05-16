@@ -242,7 +242,7 @@
           - eq: ["content.result.errorCode", 'VIP_CARD_NOT_EXISTS']
 
 
-# 前提： 获取充值方案的id,  会员卡号
+# 前提： 获取充值方案的id,  会员卡号，这个用例注释掉
 #- test:
 #      name: Get_discountofVIP_success
 #      request:
