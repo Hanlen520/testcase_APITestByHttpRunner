@@ -2,6 +2,7 @@ node('229') {
 
    stage('Preparation') {
        git credentialsId: '6a944868-6bf7-445e-aa78-94b233e043e4', url: 'http://gitlab.caibaopay.com/dengmingyao/testcase_PCCashier_APITest.git'
+       git pull
     }
 
    stage('Build') {
