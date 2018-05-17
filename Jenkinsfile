@@ -11,7 +11,7 @@ cd ..
 
 source httpruner_venv/bin/activate
 
-cd PCCashier_APITest
+cd PCCashier_APITest_Dev
 
 hrun --dot-env-path devlop.env --html-report-name index_dev.html tests/testcases/'''
    }
