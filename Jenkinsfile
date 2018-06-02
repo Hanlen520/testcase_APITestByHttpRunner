@@ -7,7 +7,7 @@ node('229') {
     stage('Build') {
         sh '''#!/bin/bash
 
-        set +e
+        set -e
 
         cd ..
 
