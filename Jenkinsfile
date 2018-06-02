@@ -7,14 +7,10 @@ node('229') {
     stage('Build') {
         catchError {
             sh '''#!/bin/bash
-
-            set -e
-
             cd ..
-
             source httpruner_venv/bin/activate
-
             cd PCCashier_APITest_Dev
+
             hrun --dot-env-path devlop.env --html-report-name index_dev.html tests/testcases/'''
         }
         echo currentBuild.result
@@ -22,6 +18,6 @@ node('229') {
     }
 
     stage('Results') {
-        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, includes: '**/*.html', keepAll: true, reportDir: '/home/jenkins/work/workspace/PCCashier_APITest_Dev/reports', reportFiles: 'index_dev.html', reportName: '接口测试报告', reportTitles: 'PC收银台接口测试报告'])
+        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, includes: '**/*.html', keepAll: true, reportDir: '/home/jenkins/work/workspace/PCCashier_APITest_Dev/reports', reportFiles: 'index_dev.html', reportName: 'Html_Report', reportTitles: 'PC收银台接口测试报告'])
     }
 }
