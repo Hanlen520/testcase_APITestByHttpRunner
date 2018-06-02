@@ -1,22 +1,24 @@
 node('229') {
 
-   stage('Preparation') {
-       git credentialsId: '6a944868-6bf7-445e-aa78-94b233e043e4', url: 'http://gitlab.caibaopay.com/dengmingyao/testcase_PCCashier_APITest.git'
+    stage('Preparation') {
+        git credentialsId: '6a944868-6bf7-445e-aa78-94b233e043e4', url: 'http://gitlab.caibaopay.com/dengmingyao/testcase_PCCashier_APITest.git'
     }
 
-   stage('Build') {
-       sh '''#!/bin/bash
+    stage('Build') {
+        sh '''#!/bin/bash
 
-cd ..
+        set +e
 
-source httpruner_venv/bin/activate
+        cd ..
 
-cd PCCashier_APITest_Dev
+        source httpruner_venv/bin/activate
 
-hrun --dot-env-path devlop.env --html-report-name index_dev.html tests/testcases/'''
-   }
+        cd PCCashier_APITest_Dev
 
-   stage('Results') {
-       publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, includes: '**/*.html', keepAll: true, reportDir: '/home/jenkins/work/workspace/PCCashier_APITest_Dev/reports', reportFiles: 'index_dev.html', reportName: '接口测试报告', reportTitles: 'PC收银台接口测试报告'])
-   }
+        hrun --dot-env-path devlop.env --html-report-name index_dev.html tests/testcases/'''
+    }
+
+    stage('Results') {
+        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, includes: '**/*.html', keepAll: true, reportDir: '/home/jenkins/work/workspace/PCCashier_APITest_Dev/reports', reportFiles: 'index_dev.html', reportName: '接口测试报告', reportTitles: 'PC收银台接口测试报告'])
+    }
 }
