@@ -15,7 +15,11 @@ node('229') {
 
         cd PCCashier_APITest_Dev
 
-        hrun --dot-env-path devlop.env --html-report-name index_dev.html tests/testcases/'''
+        catchError {
+            hrun --dot-env-path devlop.env --html-report-name index_dev.html tests/testcases/'''
+        }
+        echo currentBuild.result
+
     }
 
     stage('Results') {
