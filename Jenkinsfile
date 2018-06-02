@@ -17,6 +17,6 @@ hrun --dot-env-path devlop.env --html-report-name index_dev.html tests/testcases
    }
 
    stage('Results') {
-       publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, includes: '**/*.html', keepAll: true, reportDir: '/home/jenkins/work/workspace/PCCashier_APITest/reports', reportFiles: 'index_dev.html', reportName: '接口测试报告', reportTitles: 'PC收银台接口测试报告'])
+       publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, includes: '**/*.html', keepAll: true, reportDir: '/home/jenkins/work/workspace/PCCashier_APITest_Dev/reports', reportFiles: 'index_dev.html', reportName: '接口测试报告', reportTitles: 'PC收银台接口测试报告'])
    }
 }
