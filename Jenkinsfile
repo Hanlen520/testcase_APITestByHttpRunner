@@ -5,17 +5,16 @@ node('229') {
     }
 
     stage('Build') {
-        sh '''#!/bin/bash
-
-        set -e
-
-        cd ..
-
-        source httpruner_venv/bin/activate
-
-        cd PCCashier_APITest_Dev
-
         catchError {
+            sh '''#!/bin/bash
+
+            set -e
+
+            cd ..
+
+            source httpruner_venv/bin/activate
+
+            cd PCCashier_APITest_Dev
             hrun --dot-env-path devlop.env --html-report-name index_dev.html tests/testcases/'''
         }
         echo currentBuild.result
