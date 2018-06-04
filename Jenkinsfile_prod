@@ -1,0 +1,23 @@
+node('229') {
+
+    stage('Preparation') {
+        git credentialsId: '6a944868-6bf7-445e-aa78-94b233e043e4', url: 'http://gitlab.caibaopay.com/dengmingyao/testcase_PCCashier_APITest.git'
+    }
+
+    stage('Build') {
+        catchError {
+            sh '''#!/bin/bash
+            cd ..
+            source httpruner_venv/bin/activate
+            cd PCCashier_APITest_Dev
+
+            hrun --dot-env-path prod.env --html-report-name index_dev.html tests/testcases/'''
+        }
+        echo currentBuild.result
+
+    }
+
+    stage('Results') {
+        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, includes: '**/*.html', keepAll: true, reportDir: '/home/jenkins/work/workspace/PCCashier_APITest_Dev/reports', reportFiles: 'index_dev.html', reportName: 'Html_Report', reportTitles: 'PC收银台接口测试报告'])
+    }
+}
