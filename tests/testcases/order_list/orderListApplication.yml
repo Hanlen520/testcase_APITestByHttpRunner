@@ -21,24 +21,26 @@
 
 
 # 接口syt_v2_orderpay_list，获取订单列表的测试用例
-
 - test:
-      name: Get_vip_info_fail_cardNo_Null
+      name: Get_orderlist_v2
       request:
           url: ''
-          method: POST
           data:
-              cardNo: ''
-          params:
-              command: syt_v3_member_card_info
+              outOrderNO:
+              paymentChannel:
+              tradeType:
+              onlySucOrder: 1
+              page: 1
+              pageSize: 5
+              paymentBeginTime: 2018-06-04 00:00:00
+              paymentEndTime: 2018-06-04 23:59:59
 
-      validators:
+          method: POST
+          params:
+              command: syt_v2_orderpay_list
+
+      validate:
           - eq: ["status_code", 200]
           - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
-          - eq: ["content.result.success", False]
-          - eq: ["content.result.errorCode", '10']
-
-
-
-
+          - eq: ["content.result.success", True]
 
