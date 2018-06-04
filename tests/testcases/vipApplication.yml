@@ -242,24 +242,24 @@
           - eq: ["content.result.errorCode", 'VIP_CARD_NOT_EXISTS']
 
 
-# 前提： 获取充值方案的id,  会员卡号，这个用例注释掉
-#- test:
-#      name: Get_discountofVIP_success
-#      request:
-#          url: ''
-#          method: POST
-#          data:
-#              cardNo: $vipCardNo
-#              rechargeAmount: 1
-#              activityId: $rechargeScheme
-#          params:
-#              command: syt_v3_get_upgrade_discount
-#
-#      validate:
-#          - eq: ["status_code", 200]
-#          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
-#          - eq: ["content.result.success", True]
-#          - eq: ["content.result.errorCode", '0']
+# 前提： 获取充值方案的id,  会员卡号
+- test:
+      name: Get_discountofVIP_success
+      request:
+          url: ''
+          method: POST
+          data:
+              cardNo: $vipCardNo
+              rechargeAmount: 1
+              activityId: $rechargeScheme
+          params:
+              command: syt_v3_get_upgrade_discount
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+          - eq: ["content.result.errorCode", '0']
 
 #接口syt_v2_member_card_recharge，会员充值的测试用例
 # 前提： 获取充值方案的id,  会员卡号
@@ -307,26 +307,6 @@
           - eq: ["content.result.success", False]
           - eq: ["content.result.errorCode", 'PARAM_ERROR']
 
-- test:
-      name: Recharge_vipCard_fail_cardNo_notExist
-      request:
-          url: ''
-          method: POST
-          data:
-              cardNo: 1
-              rechargeAmount: 1
-              activityId: $rechargeScheme
-              tradeType: 5  # 现金记账
-              print: false  #
-
-          params:
-              command: syt_v2_member_card_recharge
-
-      validate:
-          - eq: ["status_code", 200]
-          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
-          - eq: ["content.result.success", False]
-          - eq: ["content.result.errorCode", 'PARAM_ERROR']
 
 - test:
       name: Recharge_vipCard_fail_rechargeAmount_null
