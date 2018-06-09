@@ -20,8 +20,7 @@ import os
 base_url = os.environ.get('base_url')
 activateCode = os.environ.get('activateCode')
 
-
-global database_tc
+database_tc = None
 
 
 def connect_database():

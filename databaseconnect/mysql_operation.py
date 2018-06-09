@@ -19,7 +19,6 @@ import yaml
 import io
 import logging
 from functools import wraps
-import os
 
 
 def singleton(cls):
@@ -57,19 +56,7 @@ class MySQLOperation:
     # 返回数据库的一条记录
     def select_one_record(self, query, data=""):
         logging.info('query：%s  data：%s' % (query, data))
-        # db_cursor = self.connection.cursor()
-        query_result = None
-        # try:
-        #     if data:
-        #         db_cursor.execute(query, data)
-        #     else:
-        #         db_cursor.execute(query)
-        #     query_result = db_cursor.fetchone()
-        # except Exception as e:
-        #     logging.error('执行数据库查询操作失败：%s' % e)
-        # finally:
-        #     db_cursor.close()
-        # return query_result
+
         with self.connection.cursor() as cursor:
             if data:
                 cursor.execute(query, data)
