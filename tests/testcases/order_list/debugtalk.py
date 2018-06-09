@@ -15,6 +15,7 @@
 __author__ = 'Meiyo'
 
 from databaseconnect.mysql_operation import *
+import os
 
 base_url = os.environ.get('base_url')
 activateCode = os.environ.get('activateCode')
