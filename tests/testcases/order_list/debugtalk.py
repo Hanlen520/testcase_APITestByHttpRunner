@@ -28,9 +28,9 @@ def connect_database():
     global database_tc
     try:
         if base_url.__eq__('base_url=http://openapi.caibaopay.com//gateway.htm'):
-            database_tc = MySQLOperation(os.getcwd() + '\databaseconfig\database_product.yml', 'caibaotc')
+            database_tc = MySQLOperation(os.getcwd() + '/databaseconfig/database_product.yml', 'caibaotc')
         else:
-            database_tc = MySQLOperation(os.getcwd() + '\databaseconfig\database_devlop.yml', 'caibaotc')
+            database_tc = MySQLOperation(os.getcwd() + '/databaseconfig/database_devlop.yml', 'caibaotc')
     except Exception as ex:
         logging.error('连接数据库失败：%s', ex)
 
