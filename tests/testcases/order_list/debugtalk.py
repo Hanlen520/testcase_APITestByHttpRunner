@@ -14,16 +14,92 @@
 """
 __author__ = 'Meiyo'
 
-import os
 from databaseconnect.mysql_operation import *
 
 base_url = os.environ.get('base_url')
+activateCode = os.environ.get('activateCode')
 
-mysql_single = MySQLOperation()
+
+global database_tc
 
 
-if base_url.__eq__('base_url=http://openapi.caibaopay.com//gateway.htm'):
-    connection = mysql_single.get_connection('databaseconfig/database_product.yml', 'caibaotc')
-else:
-    connection = mysql_single.get_connection('databaseconfig/database_devlop.yml', 'caibaotc')
+def connect_database():
+    global database_tc
+    try:
+        if base_url.__eq__('base_url=http://openapi.caibaopay.com//gateway.htm'):
+            database_tc = MySQLOperation(os.getcwd() + '\databaseconfig\database_product.yml', 'caibaotc')
+        else:
+            database_tc = MySQLOperation(os.getcwd() + '\databaseconfig\database_devlop.yml', 'caibaotc')
+    except Exception as ex:
+        logging.error('连接数据库失败：%s', ex)
+
+
+def close_connection():
+    database_tc.close_connection()
+
+
+def get_order_detail_by_orderno(local_order_no):
+    if not database_tc:
+        return None
+
+    query = 'SELECT * FROM caibaotc.tc_order_cp where viewer_id1 = %s and local_order_no = %s'
+    data = (activateCode, local_order_no)
+    try:
+        result = database_tc.select_one_record(query, data)
+
+    except Exception as ex:
+        print("执行数据库查询失败(get_order_detail_by_orderno) ", ex)
+        logging.error("执行数据库查询失败(get_order_detail_by_orderno) ", ex)
+        return None
+    return result
+
+
+def get_order_list_by_datetime(begin, end):
+
+    if not database_tc:
+        return None
+
+    query = ('SELECT * FROM caibaotc.tc_order_cp where viewer_id1 = %s and trade_time between %s and %s '
+             'order by trade_time DESC')
+    data = (activateCode, begin, end)
+    try:
+        result = database_tc.select_many_record(query, data)
+
+    except Exception as ex:
+        print("执行数据库查询失败(get_order_list_by_datetime) ", ex)
+        logging.error("执行数据库查询失败(get_order_list_by_datetime) ", ex)
+        return None
+
+    return list(result)
+
+
+def get_order_count_by_datetime(begin, end):
+
+    if not database_tc:
+        return None
+
+    query = ('SELECT COUNT(*) FROM caibaotc.tc_order_cp where viewer_id1 = %s and trade_time between %s and %s')
+    data = (activateCode, begin, end)
+    try:
+        result = database_tc.select_one_record(query, data)
+
+    except Exception as ex:
+        print("执行数据库查询失败(get_order_count_by_datetime) ", ex)
+        logging.error("执行数据库查询失败(get_order_count_by_datetime) ", ex)
+        return None
+
+    return str(result[0])
+
+
+if __name__ == '__main__':
+    # order_detail = get_order_detail_by_orderno('TCCASH1806041916180261582593')
+    # print('订单详情')
+    # print(order_detail)
+    order_list = get_order_list_by_datetime('2018-06-04 00:00:00', '2018-06-04 23:59:59')
+    print('订单列表')
+
+    # order_list = get_order_count_by_datetime('2018-06-04 00:00:00', '2018-06-04 23:59:59')
+    # print('订单数量')
+
+    print(order_list)
 

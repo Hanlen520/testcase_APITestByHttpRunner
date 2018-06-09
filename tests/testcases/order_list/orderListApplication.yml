@@ -12,6 +12,10 @@
 - config:
       name: order list  application
       request: $default_request
+      setup_hooks:
+          - ${connect_database()}
+      teardown_hooks:
+          - ${close_connection()}
 
 
 # 收银员登录
@@ -23,6 +27,11 @@
 # 接口syt_v2_orderpay_list，获取订单列表的测试用例
 - test:
       name: Get_orderlist_v2
+      variables:
+          - beginTime: 2018-06-04 00:00:00
+          - endTime: 2018-06-04 23:59:59
+          - orderCount: ${get_order_count_by_datetime($beginTime, $endTime)}
+
       request:
           url: ''
           data:
@@ -32,8 +41,8 @@
               onlySucOrder: 1
               page: 1
               pageSize: 5
-              paymentBeginTime: 2018-06-04 00:00:00
-              paymentEndTime: 2018-06-04 23:59:59
+              paymentBeginTime: $beginTime
+              paymentEndTime: $endTime
 
           method: POST
           params:
@@ -43,4 +52,5 @@
           - eq: ["status_code", 200]
           - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
           - eq: ["content.result.success", True]
+          - eq: ["content.data.totalItem", $orderCount]
 
