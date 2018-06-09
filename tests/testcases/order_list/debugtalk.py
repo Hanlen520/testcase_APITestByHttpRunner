@@ -91,15 +91,4 @@ def get_order_count_by_datetime(begin, end):
     return str(result[0])
 
 
-if __name__ == '__main__':
-    # order_detail = get_order_detail_by_orderno('TCCASH1806041916180261582593')
-    # print('订单详情')
-    # print(order_detail)
-    order_list = get_order_list_by_datetime('2018-06-04 00:00:00', '2018-06-04 23:59:59')
-    print('订单列表')
-
-    # order_list = get_order_count_by_datetime('2018-06-04 00:00:00', '2018-06-04 23:59:59')
-    # print('订单数量')
-
-    print(order_list)
 
