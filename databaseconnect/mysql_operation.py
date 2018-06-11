@@ -63,16 +63,19 @@ class MySQLOperation:
             else:
                 cursor.execute(query)
             query_result = cursor.fetchone()
+
         return query_result
 
     def select_many_record(self, query, data=""):
         logging.info('query：%s  data：%s' % (query, data))
+
         with self.connection.cursor() as cursor:
             if data:
                 numbers = cursor.execute(query, data)
             else:
                 numbers = cursor.execute(query)
             query_result = cursor.fetchmany(numbers)
+
         return query_result
 
     def execute_insert(self, query, data=''):
