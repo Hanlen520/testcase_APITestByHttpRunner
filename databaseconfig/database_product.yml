@@ -10,28 +10,28 @@
 #-------------------------------------------------
 
 zypPlatformTest:
-    host: 114.55.27.99
+    host: 120.27.204.159
     port: 3306
     user: webuserlimit
-    password: ZI@limited1213
+    password: Ezr-qj)#fdaf$%T-z4p-Fjr
     db: zypPlatformTest
     charset: utf8
 
 
 caibaovip:
-    host: 118.178.129.90
+    host: 116.62.31.240
     port: 8066
-    user: webuserlimit
-    password: ZI@limited1213
+    user: webuserlimit_read
+    password: ZI@limited1234
     db: caibaovip
     charset: utf8
 
 
 caibaotc:
-    host: 118.178.129.90
+    host: 116.62.31.240
     port: 8066
-    user: webuserlimit
-    password: ZI@limited1213
+    user: webuserlimit_read
+    password: ZI@limited1234
     db: caibaotc
     charset: utf8
 

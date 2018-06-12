@@ -20,13 +20,13 @@ import os
 base_url = os.environ.get('base_url')
 activateCode = os.environ.get('activateCode')
 
-global database_tc
+# global database_tc
 
 
 def connect_database():
     global database_tc
     try:
-        if base_url.__eq__('base_url=http://openapi.caibaopay.com//gateway.htm'):
+        if base_url.__eq__('http://openapi.caibaopay.com//gateway.htm'):
             database_tc = MySQLOperation(os.getcwd() + '/databaseconfig/database_product.yml', 'caibaotc')
         else:
             database_tc = MySQLOperation(os.getcwd() + '/databaseconfig/database_devlop.yml', 'caibaotc')
