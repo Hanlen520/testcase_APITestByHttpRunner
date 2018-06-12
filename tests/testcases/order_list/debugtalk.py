@@ -20,8 +20,6 @@ import os
 base_url = os.environ.get('base_url')
 activateCode = os.environ.get('activateCode')
 
-# global database_tc
-
 
 def connect_database():
     global database_tc
@@ -89,6 +87,15 @@ def get_order_count_by_datetime(begin, end):
         return None
 
     return str(result[0])
+
+
+def get_out_order_no():
+    if base_url.__eq__('http://openapi.caibaopay.com//gateway.htm'):
+        out_order_no = '4200000117201806122546412562'
+    else:
+        out_order_no = '4200000109201806124355210311'
+
+    return out_order_no
 
 
 

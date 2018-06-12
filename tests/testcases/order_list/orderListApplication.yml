@@ -12,6 +12,8 @@
 - config:
       name: order list  application
       request: $default_request
+      variables:
+          - out_order_no: ${get_out_order_no()}
       setup_hooks:
           - ${connect_database()}
       teardown_hooks:
@@ -24,9 +26,9 @@
       suite: cashier_login($activateCode, $userCode, $userPwd)
 
 
-# 接口syt_v2_orderpay_list，获取订单列表的测试用例
+# 接口syt_v2_orderpay_list，根据开始时间和结束时间，获取订单列表的测试用例
 - test:
-      name: Get_orderlist_v2
+      name: Get_orderlist_v2_by_date
       variables:
           - beginTime: 2018-06-04 00:00:00
           - endTime: 2018-06-04 23:59:59
@@ -53,4 +55,82 @@
           - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
           - eq: ["content.result.success", True]
           - eq: ["content.data.totalItem", $orderCount]
+
+
+# 接口syt_v2_orderpay_list，根据交易号，获取订单列表的测试用例
+- test:
+      name: Get_orderlist_v2_by_order
+      variables:
+          - beginTime: 2018-06-04 00:00:00
+          - endTime: 2018-06-04 23:59:59
+
+      request:
+          url: ''
+          data:
+              outOrderNO: $out_order_no
+              paymentChannel:
+              tradeType:
+              onlySucOrder: 1
+              paymentBeginTime: $beginTime
+              paymentEndTime: $endTime
+
+          method: POST
+          params:
+              command: syt_v2_orderpay_list
+
+      extract:
+          - refundedOrderNo: content.data.list.0.localOrderNo
+          - receiveOrderNo: content.data.list.1.localOrderNo
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+          - eq: ["content.data.list.0.outOrderNo", $out_order_no]
+          - eq: ["content.data.totalItem", '2']
+
+
+# 接口syt_v2_orderpay_detail，根据退款订单号，获取订单详情
+- test:
+      name: Get_order_detail_by_refunded_order
+
+      request:
+          url: ''
+          data:
+              localOrderNo: $refundedOrderNo
+
+          method: POST
+          params:
+              command: syt_v2_orderpay_detail
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+          - eq: ["content.data.outOrderNo", $out_order_no]
+          - eq: ["content.data.refLocalOrderNo", $receiveOrderNo]
+
+# 接口syt_v2_orderpay_detail，根据收款订单号，获取订单详情
+- test:
+      name: Get_order_detail_by_receive_order
+
+      request:
+          url: ''
+          data:
+              localOrderNo: $receiveOrderNo
+
+          method: POST
+          params:
+              command: syt_v2_orderpay_detail
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+          - eq: ["content.data.outOrderNo", $out_order_no]
+          - eq: ["content.data.localOrderNo", $receiveOrderNo]
+
+
+
+
 
