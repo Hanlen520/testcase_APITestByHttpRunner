@@ -12,10 +12,12 @@
 - config:
       name: VIP application
       request: $default_request
+
       setup_hooks:
           - ${connect_database()}
       teardown_hooks:
           - ${close_connection()}
+
 
 # 收银员登录
 - test:
@@ -105,7 +107,6 @@
 # 根据会员卡号，获取券列表
 - test:
       name: Get_couponList_ofVip_success
-
       skipUnless: $couponCount
 
       request:
@@ -285,7 +286,7 @@
               rechargeAmount: 1
               activityId: $rechargeScheme
               tradeType: 5  # 现金记账
-              remak: '现金记账'
+              remark: '现金记账'
               print: false  # 参数的意义
 
           params:
@@ -373,9 +374,8 @@
               rechargeAmount: 1
               activityId: $rechargeScheme
               tradeType: 5  # 现金记账
-              remak: '现金记账'
+              remark: '现金记账'
               print: false
-
           params:
               command: syt_v2_member_card_recharge
 
@@ -386,7 +386,7 @@
           - str_eq: ["content.result.errorCode", 0]
           - str_eq: ["content.data.orderStatus", 2]
           - str_eq: ["content.data.tradeType", 3]
-          - eq: ["content.data.remark", '会员卡充值']
+          - eq: ["content.data.remark", '现金记账']
           - not_equals: ["content.data.localOrderNo", '']
 
 
