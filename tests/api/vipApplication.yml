@@ -41,6 +41,7 @@
 
     extract:
         - vipCardNo: content.data.cardNo
+        - couponCount: content.data.couponCount
     validators:
         - eq: ["status_code", 200]
         - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']

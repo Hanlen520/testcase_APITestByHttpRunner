@@ -6,13 +6,16 @@
 #-------------------------------------------------
 #   Change Activity:
 #                   2018/1/5: Create the file
-#------------------------------------------------- 
-
+#-------------------------------------------------
 
 
 - config:
       name: VIP application
       request: $default_request
+      setup_hooks:
+          - ${connect_database()}
+      teardown_hooks:
+          - ${close_connection()}
 
 # 收银员登录
 - test:
@@ -102,6 +105,9 @@
 # 根据会员卡号，获取券列表
 - test:
       name: Get_couponList_ofVip_success
+
+      skipUnless: $couponCount
+
       request:
           url: ''
           method: POST
@@ -110,11 +116,15 @@
           params:
               command: syt_v3_member_coupon_list
 
+      variables:
+          - coupons_code: ${get_first_coupon_code($vipCardNo)}
+
       validators:
           - eq: ["status_code", 200]
           - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
           - eq: ["content.result.success", True]
           - eq: ["content.result.errorCode", '0']
+          - eq: ["content.data.couponList.0.couponCode", $coupons_code]
 
 #接口syt_v3_update_member_card_info，更新会员基础信息的测试用例
 # 会员卡号不存在
@@ -243,8 +253,10 @@
 
 
 # 前提： 获取充值方案的id,  会员卡号
+# 根据充值金额，计算会员当前可获取的折扣
 - test:
       name: Get_discountofVIP_success
+      skipUnless: $rechargeScheme
       request:
           url: ''
           method: POST
@@ -263,7 +275,6 @@
 
 #接口syt_v2_member_card_recharge，会员充值的测试用例
 # 前提： 获取充值方案的id,  会员卡号
-
 - test:
       name: Recharge_vipCard_fail_cardNo_null
       request:
