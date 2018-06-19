@@ -88,7 +88,7 @@ def get_order_count_by_datetime(begin, end):
 
     return str(result[0])
 
-
+# 获取外部交易号（非充值订单），根据不同的测试环境
 def get_out_order_no():
     if base_url.__eq__('http://openapi.caibaopay.com//gateway.htm'):
         out_order_no = '4200000117201806122546412562'
@@ -98,4 +98,12 @@ def get_out_order_no():
     return out_order_no
 
 
+# 获取本地订单号（充值订单），根据不同的测试环境
+def get_recharge_order_no():
+    if base_url.__eq__('http://openapi.caibaopay.com//gateway.htm'):
+        recharge_order_no = 'TCCASH1806190622027509782855'
+    else:
+        recharge_order_no = 'TCCASH1806191050400752301432'
+
+    return recharge_order_no
 

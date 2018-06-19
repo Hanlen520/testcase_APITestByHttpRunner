@@ -14,6 +14,7 @@
       request: $default_request
       variables:
           - out_order_no: ${get_out_order_no()}
+          - recharge_order_no: ${get_recharge_order_no()}
       setup_hooks:
           - ${connect_database()}
       teardown_hooks:
@@ -129,6 +130,49 @@
           - eq: ["content.result.success", True]
           - eq: ["content.data.outOrderNo", $out_order_no]
           - eq: ["content.data.localOrderNo", $receiveOrderNo]
+
+
+# 接口csrf_token，获取退款时的Token
+- test:
+      name: Get_csrf_token
+
+      request:
+          url: ''
+          method: POST
+          params:
+              command: csrf_token
+
+      extract:
+          - csrfToken: content.data.csrfToken
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", True]
+
+
+# 接口syt_v2_orderpay_refund，充值订单，不允许退款
+- test:
+      name: Get_order_detail_by_receive_order
+
+      request:
+          url: ''
+          data:
+              localOrderNo: $recharge_order_no
+              operationPwd: 123456
+              refundAmount: 1
+              _csrf_token: $csrfToken
+              print: false
+
+          method: POST
+          params:
+              command: syt_v2_orderpay_refund
+
+      validate:
+          - eq: ["status_code", 200]
+          - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
+          - eq: ["content.result.success", false]
+          - eq: ["content.result.errorCode", 'recharge_orderpay_not_support_refund']
 
 
 
