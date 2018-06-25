@@ -12,7 +12,6 @@
 - config:
       name: VIP application
       request: $default_request
-
       setup_hooks:
           - ${connect_database()}
       teardown_hooks:

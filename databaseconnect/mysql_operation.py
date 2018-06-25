@@ -18,22 +18,9 @@ import pymysql
 import yaml
 import io
 import logging
-from functools import wraps
-
-
-def singleton(cls):
-    instances = {}
-
-    @wraps(cls)
-    def get_instance(*args, **kw):
-        if cls not in instances:
-            instances[cls] = cls(*args, **kw)
-        return instances[cls]
-    return get_instance
 
 
 # 获取数据库连接，配置数据库IP，端口等信息，获取数据库连接
-
 class MySQLOperation:
     def __init__(self, config_file, database_name):
 
