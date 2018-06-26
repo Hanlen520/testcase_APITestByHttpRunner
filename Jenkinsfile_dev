@@ -17,6 +17,7 @@ node('229') {
         }
         echo currentBuild.result
 
+
         if (currentBuild.result == null)
         {
             emailext (
