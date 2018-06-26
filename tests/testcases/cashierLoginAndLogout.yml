@@ -51,7 +51,7 @@
         validators:
             - eq: ["status_code", 200]
             - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
-            - eq: ["content.result.success", True]
+            - eq: ["content.result.success", False]
             - eq: ["content.result.errorCode", '200']
 
 # 收银员登录，密码错误
