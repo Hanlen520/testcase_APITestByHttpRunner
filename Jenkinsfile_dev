@@ -17,7 +17,7 @@ node('229') {
         }
         echo currentBuild.result
 
-        if (currentBuild.result == 'null')
+        if (currentBuild.result == null)
         {
             slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
             hipchatSend (color: 'RED', notify: true, message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})"
@@ -28,7 +28,7 @@ node('229') {
                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>""",
                 recipientProviders: [[$class: 'DevelopersRecipientProvider']],
                 to: 'dengmingyao@caibaopay.com'
-                )
+            )
         }
     }
 
