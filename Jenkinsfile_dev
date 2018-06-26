@@ -17,7 +17,7 @@ node('229') {
         }
         echo currentBuild.result
 
-        if (currentBuild.result == null)
+        if (currentBuild.result == 'FAILURE')
         {
             step([$class: 'Mailer', notifyEveryUnstableBuild: true,
             recipients: emailextrecipients([[$class: 'CulpritsRecipientProvider'],
