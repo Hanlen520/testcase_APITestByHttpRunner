@@ -73,6 +73,9 @@ class MySQLOperation:
             else:
                 cursor.execute(query)
 
+        # connection is not autocommit by default. So you must commit to save
+        self.connection.commit()
+
     def close_connection(self):
         self.connection.close()
 

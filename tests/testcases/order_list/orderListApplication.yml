@@ -31,8 +31,8 @@
 - test:
       name: Get_orderlist_v2_by_date
       variables:
-          - beginTime: 2018-06-04 00:00:00
-          - endTime: 2018-06-04 23:59:59
+          - beginTime: 2018-08-06 00:00:00
+          - endTime: 2018-08-06 23:59:59
           - orderCount: ${get_order_count_by_datetime($beginTime, $endTime)}
 
       request:
@@ -62,8 +62,8 @@
 - test:
       name: Get_orderlist_v2_by_order
       variables:
-          - beginTime: 2018-06-04 00:00:00
-          - endTime: 2018-06-04 23:59:59
+          - beginTime: 2018-08-06 00:00:00
+          - endTime: 2018-08-06 23:59:59
 
       request:
           url: ''
