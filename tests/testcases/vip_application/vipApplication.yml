@@ -61,7 +61,7 @@
           - eq: ["status_code", 200]
           - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
           - eq: ["content.result.success", False]
-          - eq: ["content.result.errorCode", 'VIP_CARD_NOT_EXISTS']
+          - eq: ["content.result.errorCode", 'vip_not_exists']
 
 - test:
       name: Get_vipInfo_success
@@ -249,7 +249,7 @@
           - eq: ["status_code", 200]
           - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
           - eq: ["content.result.success", False]
-          - eq: ["content.result.errorCode", 'VIP_CARD_NOT_EXISTS']
+          - eq: ["content.result.errorCode", 'vip_not_exists']
 
 
 # 前提： 获取充值方案的id,  会员卡号
