@@ -16,6 +16,7 @@ __author__ = 'Meiyo'
 
 from databaseconnect.mysql_operation import *
 import os
+import datetime
 
 base_url = os.environ.get('base_url')
 activateCode = os.environ.get('activateCode')
@@ -50,6 +51,14 @@ def get_order_detail_by_orderno(local_order_no):
         logging.error("执行数据库查询失败(get_order_detail_by_orderno) ", ex)
         return None
     return result
+
+
+def get_datetime_yesterday0():
+    return datetime.date.strftime(datetime.date.today() - datetime.timedelta(days=1), "%Y-%m-%d") + ' 00:00:00'
+
+
+def get_datetime_yesterday23():
+    return datetime.date.strftime(datetime.date.today() - datetime.timedelta(days=1), "%Y-%m-%d") + ' 23:59:59'
 
 
 def get_order_list_by_datetime(begin, end):
@@ -106,4 +115,6 @@ def get_recharge_order_no():
         recharge_order_no = 'TCCASH1806191050400752301432'
 
     return recharge_order_no
+
+
 
