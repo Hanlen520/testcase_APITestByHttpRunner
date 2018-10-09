@@ -53,12 +53,16 @@ def get_order_detail_by_orderno(local_order_no):
     return result
 
 
-def get_datetime_yesterday0():
-    return datetime.date.strftime(datetime.date.today() - datetime.timedelta(days=1), "%Y-%m-%d") + ' 00:00:00'
+def get_datetime_yesterday(begin_end):
 
+    datetime_yesterday = datetime.date.today() - datetime.timedelta(days=1)
 
-def get_datetime_yesterday23():
-    return datetime.date.strftime(datetime.date.today() - datetime.timedelta(days=1), "%Y-%m-%d") + ' 23:59:59'
+    if begin_end == 'begin':
+        time_begin = datetime.datetime.combine(datetime_yesterday, datetime.time.min)
+        return datetime.datetime.strftime(time_begin, "%Y-%m-%d %H:%M:%S")
+    else:
+        time_end = datetime.datetime.combine(datetime_yesterday, datetime.time.max)
+        return datetime.datetime.strftime(time_end, "%Y-%m-%d %H:%M:%S")
 
 
 def get_order_list_by_datetime(begin, end):
@@ -115,6 +119,5 @@ def get_recharge_order_no():
         recharge_order_no = 'TCCASH1806191050400752301432'
 
     return recharge_order_no
-
 
 
