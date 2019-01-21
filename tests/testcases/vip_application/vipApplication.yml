@@ -316,7 +316,7 @@
           - eq: ["status_code", 200]
           - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
           - eq: ["content.result.success", False]
-          - eq: ["content.result.errorCode", 'PARAM_ERROR']
+          - eq: ["content.result.errorCode", 'VIP_CARD_NOT_EXISTS']
 
 
 - test:
@@ -338,7 +338,7 @@
           - eq: ["status_code", 200]
           - eq: ["headers.Content-Type", 'text/html;charset=UTF-8']
           - eq: ["content.result.success", False]
-          - eq: ["content.result.errorCode", 'PARAM_ERROR']
+          - eq: ["content.result.errorCode", 'VIP_CARD_RECHARGE_ERROR']
 
 - test:
       name: Recharge_vipCard_fail_rechargeAmount_negative
