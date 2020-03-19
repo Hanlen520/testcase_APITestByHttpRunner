@@ -1,1 +1,1 @@
-基于HttpRunner实现的采宝收银台的接口测试
+基于HttpRunner实现的收银台的接口测试，生成测试报告，集成到Jenkins
